@@ -2,3 +2,7 @@ name: CanNotBuildHere
 version: '${project.version}'
 main: org.joon.cannotbuildhere.CanNotBuildHere
 api-version: '1.20'
+commands:
+  건차:
+    description: "[관리자명령어]"
+  test:
