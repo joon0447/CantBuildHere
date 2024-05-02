@@ -1,0 +1,4 @@
+name: CanNotBuildHere
+version: '${project.version}'
+main: org.joon.cannotbuildhere.CanNotBuildHere
+api-version: '1.20'
