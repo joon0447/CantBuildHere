@@ -12,12 +12,16 @@ import org.joon.cannotbuildhere.Utils.LoadItem;
 public class AdminAreaSetListener implements Listener {
 
     public static Location[] privateAreaLoc = new Location[2];
+    public final LoadItem loadItem;
 
+    public AdminAreaSetListener(LoadItem loadItem) {
+        this.loadItem = loadItem;
+    }
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if(CanNotBuildHere.adminList.contains(player.getUniqueId().toString())) {
-            if(player.isOp() && player.getInventory().getItemInMainHand().equals(new LoadItem().setStick())){
+            if(player.isOp() && player.getInventory().getItemInMainHand().equals(loadItem.setStick())){
                 if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
                     e.setCancelled(true);
                     privateAreaLoc[0] = e.getClickedBlock().getLocation();

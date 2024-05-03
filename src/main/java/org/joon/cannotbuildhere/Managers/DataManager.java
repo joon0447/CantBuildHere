@@ -2,6 +2,7 @@ package org.joon.cannotbuildhere.Managers;
 
 import jdk.javadoc.internal.tool.Main;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.joon.cannotbuildhere.CanNotBuildHere;
@@ -99,25 +100,66 @@ public class DataManager {
         CanNotBuildHere.notAreaList.put(arr,arr2);
     }
 
-    public void saveArea(String name, Location loc) throws IOException { // 건차 생성 시 데이터 저장
+    public void saveArea(String name, Location loc, List<Location> list) throws IOException { // 건차 생성 시 데이터 저장
         String playerUUID = new GetUUID().getUUID(name);
-        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
-        int id;
-        if(folder.listFiles() == null){
-            id = 1;
-        }else{
-            id = folder.listFiles().length;
-        }
-        File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList/" + id + ".yml");
+        File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList/" + playerUUID + ".yml");
         YamlConfiguration yc = YamlConfiguration.loadConfiguration(file);
-        List<String> playerList = new ArrayList<>();
-        playerList.add(playerUUID);
-        yc.set("player", playerList);
-        yc.set("centerX", loc.getX());
-        yc.set("centerY", loc.getY());
-        yc.set("centerZ", loc.getZ());
+        yc.set("player", playerUUID);
+        yc.set("upgrade", 1);
+        Location core = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
+        yc.set("Core Location", core);
+        yc.set("Line Location", list);
+        CanNotBuildHere.coreLoc.put(core, playerUUID);
+        CanNotBuildHere.lineAndCoreLoc.addAll(list);
         yc.save(file);
     }
+    public List<Location> loadLineLocation() {
+        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
+        File[] files = folder.listFiles();
+        List<Location> list = new ArrayList<>();
+        YamlConfiguration yc;
+        if (files != null) {
+            for (File f : files) {
+                yc = YamlConfiguration.loadConfiguration(f);
+                list.addAll((Collection<? extends Location>) yc.getList("Line Location"));
+            }
+        }
+        System.out.println("건차 테두리 좌표 로드에 성공했습니다.");
+        return list;
+    }
+
+    public HashMap<Location, String> loadCoreLocation(){
+        HashMap<Location, String> map = new HashMap<>();
+        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
+        File[] files = folder.listFiles();
+        YamlConfiguration yc;
+        String playerUUID;
+        Location coreLoc;
+        if(files != null){
+            for(File f : files){
+                yc = YamlConfiguration.loadConfiguration(f);
+                coreLoc = yc.getLocation("Core Location");
+                playerUUID = yc.getString("player");
+                map.put(coreLoc, playerUUID);
+            }
+        }
+        System.out.println("건차 코어 좌표 로드에 성공했습니다.");
+        return map;
+    }
+
+//    public List<Location> loadLineAndCoreLoc(){
+//        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
+//        File[] files = folder.listFiles();
+//        YamlConfiguration yc;
+//        List<Location> list = new ArrayList<>();
+//        if(files != null){
+//            for(File f : files){
+//                yc = YamlConfiguration.loadConfiguration(f);
+//                List<Location> l = (List<Location>) yc.getList("Line Location");
+//            }
+//        }
+//    }
+
 
     public boolean checkAlreadyCreate(String name) throws IOException { // 본인 소유의 건차가 이미 있는지 확인
         File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
@@ -126,38 +168,12 @@ public class DataManager {
         if (files != null){
             for(File f : files){
                 YamlConfiguration yc = YamlConfiguration.loadConfiguration(f);
-                List<String> list = (List<String>) yc.get("player");
-                for(String s : list){
-                    if(s.equals(playerUUID)){
-                        return false;
-                    }
+                String player = yc.getString("player");
+                if(player.equals(playerUUID)){
+                    return false;
                 }
             }
         }
         return true;
     }
-
-    public void createPlayerFile(UUID uuid) {
-        File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "PlayerList/" + uuid+ ".yml");
-        if(!file.exists()) {
-            YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-            List<String> friendsList = new ArrayList<String>();
-            List<String> mailList = new ArrayList<String>();
-            List<ItemStack> giftList = new ArrayList<ItemStack>();
-            yml.set("player", uuid.toString());
-            yml.set("friends", friendsList);
-            yml.set("mail", mailList);
-            yml.set("gift", giftList);
-            try{
-                yml.save(file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public File loadPlayerFile(UUID uuid){
-        return new File(CanNotBuildHere.getInstance().getDataFolder(), "PlayerList/" + uuid+ ".yml");
-    }
-
 }

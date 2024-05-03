@@ -1,14 +1,24 @@
 package org.joon.cannotbuildhere.Utils;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Container;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.joon.cannotbuildhere.CanNotBuildHere;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BuildLine {
 
+    public List<Location> locations = new ArrayList<>();
     public void BuildAreaLine(Player player){
         World world = player.getWorld();
         Location centerLocation = player.getLocation();
@@ -79,7 +89,9 @@ public class BuildLine {
                     startLocation.getY() + i * deltaY,
                     startLocation.getZ() + i * deltaZ);
             Block block = world.getBlockAt(blockLocation);
+            locations.add(block.getLocation());
             block.setType(Material.RED_STAINED_GLASS);
         }
     }
+
 }

@@ -20,6 +20,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class BuildAdminCommand implements CommandExecutor {
+
+    private final LoadItem loadItem;
+
+    public BuildAdminCommand(LoadItem loadItem) {
+        this.loadItem = loadItem;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if(commandSender instanceof Player) {
@@ -27,10 +34,10 @@ public class BuildAdminCommand implements CommandExecutor {
             if(player.isOp()){
                 if(args.length == 1) {
                     if(args[0].equals("지급")){
-                        player.getInventory().addItem(new LoadItem().createPaper());
+                        player.getInventory().addItem(loadItem.createPaper());
                         player.sendMessage(CanNotBuildHere.prefix + "건설차단권이 지급되었습니다.");
                     }else if(args[0].equals("막대")){
-                        player.getInventory().addItem(new LoadItem().setStick());
+                        player.getInventory().addItem(loadItem.setStick());
                         player.sendMessage(CanNotBuildHere.prefix + "건차금지구역 설정 막대가 지급되었습니다.");
                         player.sendMessage(CanNotBuildHere.prefix + "좌클릭, 우클릭으로 금지구역을 설정할 수 있습니다.");
                     }else if(args[0].equals("설정")){
