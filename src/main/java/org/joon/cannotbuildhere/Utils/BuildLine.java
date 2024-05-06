@@ -18,13 +18,11 @@ import java.util.List;
 
 public class BuildLine {
 
-    public List<Location> locations = new ArrayList<>();
-    public void BuildAreaLine(Player player){
-        World world = player.getWorld();
-        Location centerLocation = player.getLocation();
+    public void BuildAreaLine(Location centerLocation){
+        World world = centerLocation.getWorld();
 
         int sizeX = CanNotBuildHere.getInstance().areaDefaultSize + 3; // x 방향 크기
-        int sizeY = 20; // y 방향 크기
+        int sizeY = CanNotBuildHere.getInstance().areaDefaultHeight; // y 방향 크기
         int sizeZ = CanNotBuildHere.getInstance().areaDefaultSize + 3; // z 방향 크기
 
         int startX = centerLocation.getBlockX() - sizeX / 2;
@@ -89,9 +87,7 @@ public class BuildLine {
                     startLocation.getY() + i * deltaY,
                     startLocation.getZ() + i * deltaZ);
             Block block = world.getBlockAt(blockLocation);
-            locations.add(block.getLocation());
             block.setType(Material.RED_STAINED_GLASS);
         }
     }
-
 }

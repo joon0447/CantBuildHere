@@ -2,8 +2,12 @@ package org.joon.cannotbuildhere.Managers;
 
 import jdk.javadoc.internal.tool.Main;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.joon.cannotbuildhere.CanNotBuildHere;
 import org.joon.cannotbuildhere.Utils.GetUUID;
@@ -47,6 +51,7 @@ public class DataManager {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -100,7 +105,7 @@ public class DataManager {
         CanNotBuildHere.notAreaList.put(arr,arr2);
     }
 
-    public void saveArea(String name, Location loc, List<Location> list) throws IOException { // 건차 생성 시 데이터 저장
+    public void saveArea(String name, Location loc) throws IOException { // 건차 생성 시 데이터 저장
         String playerUUID = new GetUUID().getUUID(name);
         File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList/" + playerUUID + ".yml");
         YamlConfiguration yc = YamlConfiguration.loadConfiguration(file);
@@ -108,25 +113,49 @@ public class DataManager {
         yc.set("upgrade", 1);
         Location core = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         yc.set("Core Location", core);
-        yc.set("Line Location", list);
         CanNotBuildHere.coreLoc.put(core, playerUUID);
-        CanNotBuildHere.lineAndCoreLoc.addAll(list);
         yc.save(file);
     }
-    public List<Location> loadLineLocation() {
-        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList");
-        File[] files = folder.listFiles();
-        List<Location> list = new ArrayList<>();
-        YamlConfiguration yc;
-        if (files != null) {
-            for (File f : files) {
-                yc = YamlConfiguration.loadConfiguration(f);
-                list.addAll((Collection<? extends Location>) yc.getList("Line Location"));
+
+    public void destroyBlock(Location location) {
+        if (location != null) {
+            Block block = location.getBlock();
+            if (block.getType() == Material.RED_STAINED_GLASS ||
+            block.getType() == Material.HONEY_BLOCK) {
+                block.setType(Material.AIR);
             }
         }
-        System.out.println("건차 테두리 좌표 로드에 성공했습니다.");
-        return list;
     }
+    public void removeArea(String uuid, Player player){
+        File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "AreaList/" + uuid + ".yml");
+        YamlConfiguration yc = YamlConfiguration.loadConfiguration(file);
+        Location cLoc = yc.getLocation("Core Location");
+        Location loc;
+        if(cLoc != null){
+            World world = player.getWorld();
+            double x = cLoc.getX();
+            double y = cLoc.getY();
+            double z = cLoc.getZ();
+            for(double i=x-6; i<=x+6; i++){
+                for(double k=y-3; k<=y+CanNotBuildHere.getInstance().areaDefaultHeight; k++){
+                    for(double j=z-6; j<=z+6; j++){
+                        loc = new Location(world, i, k, j);
+                        destroyBlock(loc);
+                    }
+                }
+            }
+        }
+
+        if(file.exists()){
+            file.delete();
+        }
+        for(Location c : CanNotBuildHere.coreLoc.keySet()){
+            if(CanNotBuildHere.coreLoc.get(c).equals(uuid)){
+                CanNotBuildHere.coreLoc.remove(c);
+            }
+        }
+    }
+
 
     public HashMap<Location, String> loadCoreLocation(){
         HashMap<Location, String> map = new HashMap<>();

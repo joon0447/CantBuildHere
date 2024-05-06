@@ -22,6 +22,10 @@ public class Menu {
         coreRemoveMeta.setLore(Collections.singletonList(ChatColor.YELLOW + "건차는 돌려받을 수 없습니다!"));
         coreRemove.setItemMeta(coreRemoveMeta);
         inv.setItem(8, coreRemove);
+
+        ItemStack invite = new ItemStack(Material.PLAYER_HEAD);
+
+        inv.setItem(0, invite);
         player.openInventory(inv);
     }
 }

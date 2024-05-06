@@ -27,7 +27,6 @@ public class CoreClickListener implements Listener {
                 String uuid = new GetUUID().getUUID(player.getName());
                 Location eLoc = e.getClickedBlock().getLocation();
                 double x1,x2,y1,y2,z1,z2;
-                System.out.println("dsds");
                 for(Location coreLc : CanNotBuildHere.coreLoc.keySet()){
                     x1 = eLoc.getX();
                     y1 = eLoc.getY();
@@ -35,16 +34,9 @@ public class CoreClickListener implements Listener {
                     x2 = coreLc.getX();
                     y2 = coreLc.getY();
                     z2 = coreLc.getZ();
-                    System.out.println("x1 :" + x1);
-                    System.out.println("x2 :" + x2);
-                    System.out.println("z1 :" + z1);
-                    System.out.println("z2 :" + z2);
-                    System.out.println("y1 :" + y1);
-                    System.out.println("y2 :" + y2);
-                    System.out.println(uuid);
-                    System.out.println(CanNotBuildHere.coreLoc.get(coreLc));
                     if(locCheck(x1,y1,z1,x2,y2,z2) && CanNotBuildHere.coreLoc.get(coreLc).equals(uuid)){
                         check = true;
+                        e.setCancelled(true);
                         break;
                     }
                 }
