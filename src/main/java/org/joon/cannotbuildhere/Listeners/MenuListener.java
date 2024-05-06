@@ -1,6 +1,5 @@
 package org.joon.cannotbuildhere.Listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.joon.cannotbuildhere.CanNotBuildHere;
 import org.joon.cannotbuildhere.Managers.DataManager;
+import org.joon.cannotbuildhere.Menus.AddMenu;
 import org.joon.cannotbuildhere.Utils.WorldGuardUtil;
 
 
@@ -21,10 +21,12 @@ public class MenuListener implements Listener {
         String uuid;
         if(e.getView().getTitle().contains("님의 지역")){
             e.setCancelled(true);
+            player = (Player) e.getWhoClicked();
+            uuid = player.getUniqueId().toString();
             switch(e.getSlot()){
+                case 0:
+                    break;
                 case 8:
-                    player = (Player) e.getWhoClicked();
-                    uuid = player.getUniqueId().toString();
                     data.removeArea(uuid, player);
                     player.closeInventory();
                     wg.removeProtectRegion(player.getUniqueId().toString(), player.getWorld());

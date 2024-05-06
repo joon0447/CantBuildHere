@@ -24,7 +24,9 @@ public class Menu {
         inv.setItem(8, coreRemove);
 
         ItemStack invite = new ItemStack(Material.PLAYER_HEAD);
-
+        ItemMeta inviteMeta = invite.getItemMeta();
+        inviteMeta.setDisplayName(ChatColor.GREEN + "권한 부여하기");
+        invite.setItemMeta(inviteMeta);
         inv.setItem(0, invite);
         player.openInventory(inv);
     }
