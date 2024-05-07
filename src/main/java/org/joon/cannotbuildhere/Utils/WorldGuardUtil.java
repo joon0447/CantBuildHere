@@ -37,19 +37,6 @@ public class WorldGuardUtil {
 
     }
 
-    public void regionSetPVP(String owner, World world){
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionManager regions = container.get(BukkitAdapter.adapt(world));
-        if(regions != null) {
-            ProtectedRegion region = regions.getRegion(owner);
-            if(region.getFlag(Flags.PVP) == StateFlag.State.DENY){
-                region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
-            }else{
-                region.setFlag(Flags.PVP, StateFlag.State.DENY);
-            }
-        }
-    }
-
     public void removeProtectRegion(String regionName, World world){
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionManager regions = container.get(BukkitAdapter.adapt(world));
