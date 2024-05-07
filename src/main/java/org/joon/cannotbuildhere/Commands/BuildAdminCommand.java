@@ -1,28 +1,25 @@
 package org.joon.cannotbuildhere.Commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.checkerframework.checker.units.qual.C;
 import org.joon.cannotbuildhere.CanNotBuildHere;
 import org.joon.cannotbuildhere.Listeners.AdminAreaSetListener;
 import org.joon.cannotbuildhere.Managers.DataManager;
 import org.joon.cannotbuildhere.Utils.GetUUID;
 import org.joon.cannotbuildhere.Utils.LoadItem;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class BuildAdminCommand implements CommandExecutor {
 
     private final LoadItem loadItem;
 
+    DataManager dataManager = new DataManager();
     public BuildAdminCommand(LoadItem loadItem) {
         this.loadItem = loadItem;
     }
@@ -51,11 +48,26 @@ public class BuildAdminCommand implements CommandExecutor {
                         } catch (IOException e) {
                             player.sendMessage(CanNotBuildHere.prefix + "건차금지구역 설정모드 진입에 실패했습니다.");
                         }
+                    }else if(args[0].equals("금지목록")){
+                        File folder = new File(CanNotBuildHere.getInstance().getDataFolder(), "AdminAreaList");
+                        if(folder.exists()){
+                            for(File f : folder.listFiles()) {
+                                YamlConfiguration yc = YamlConfiguration.loadConfiguration(f);
+                                String name = f.getName().split("\\.")[0];
+                                player.sendMessage(CanNotBuildHere.prefix + "지역이름 : " + name);
+                                player.sendMessage(CanNotBuildHere.prefix + "(X1,Z1) : (" + yc.getString("locX1") + "," + yc.getString("locZ1") + ")");
+                                player.sendMessage(CanNotBuildHere.prefix + "(X2,Z2) : (" + yc.getString("locX2") + "," + yc.getString("locZ2") + ")");
+                            }
+                        }else{
+                            player.sendMessage(CanNotBuildHere.prefix + "존재하는 구역이 없습니다.");
+                        }
                     }else{
-                        player.sendMessage(CanNotBuildHere.prefix + "/건차 지급 : 건차생성권을 지급합니다.");
+                        player.sendMessage(CanNotBuildHere.prefix + "/건차 지급 : 건설차단권을 지급합니다.");
                         player.sendMessage(CanNotBuildHere.prefix + "/건차 막대 : 건차설정막대를 지급합니다.");
                         player.sendMessage(CanNotBuildHere.prefix + "/건차 설정 : 건차생성금지구역을 설정 모드에 진입합니다.");
                         player.sendMessage(CanNotBuildHere.prefix + "/건차 완료 지역이름 : 건차생성금지구역을 생성합니다.");
+                        player.sendMessage(CanNotBuildHere.prefix + "/건차 삭제 지역이름 : 건차생성금지구역을 삭제합니다.");
+                        player.sendMessage(CanNotBuildHere.prefix + "/건차 금지목록 : 건차생성금지구역 리스트를 확인합니다.");
                     }
                 }else if(args.length==2){
                     if(args[0].equals("완료")){
@@ -86,12 +98,24 @@ public class BuildAdminCommand implements CommandExecutor {
                             }
 
                         }
+                    }else if(args[0].equals("삭제")){
+                        String st = args[1];
+                        File file =  new File(CanNotBuildHere.getInstance().getDataFolder(), "AdminAreaList/" + st +".yml");
+                        if(file.exists()){
+                            file.delete();
+                            dataManager.loadNotAdminArea();
+                            player.sendMessage(CanNotBuildHere.prefix + "금지구역 " + st + " 를 삭제했습니다.");
+                        }else{
+                            player.sendMessage(CanNotBuildHere.prefix + "금지구역이 존재하지 않습니다.");
+                        }
                     }
                 }else{
-                    player.sendMessage(CanNotBuildHere.prefix + "/건차 지급 : 건차생성권을 지급합니다.");
+                    player.sendMessage(CanNotBuildHere.prefix + "/건차 지급 : 건설차단권을 지급합니다.");
                     player.sendMessage(CanNotBuildHere.prefix + "/건차 막대 : 건차설정막대를 지급합니다.");
                     player.sendMessage(CanNotBuildHere.prefix + "/건차 설정 : 건차생성금지구역을 설정 모드에 진입합니다.");
                     player.sendMessage(CanNotBuildHere.prefix + "/건차 완료 지역이름 : 건차생성금지구역을 생성합니다.");
+                    player.sendMessage(CanNotBuildHere.prefix + "/건차 삭제 지역이름 : 건차생성금지구역을 삭제합니다.");
+                    player.sendMessage(CanNotBuildHere.prefix + "/건차 금지목록 : 건차생성금지구역 리스트를 확인합니다.");
                 }
             }else{
                 player.sendMessage(CanNotBuildHere.prefix + "이 명령어는 관리자만 사용 가능합니다!");

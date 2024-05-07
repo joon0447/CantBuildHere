@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.joon.cannotbuildhere.CanNotBuildHere;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class WorldGuardUtil {
@@ -34,6 +35,19 @@ public class WorldGuardUtil {
         region.setFlag(Flags.DENY_MESSAGE, CanNotBuildHere.prefix + player.getName() +"님의 지역입니다.");
         com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).addRegion(region);
 
+    }
+
+    public void regionSetPVP(String owner, World world){
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regions = container.get(BukkitAdapter.adapt(world));
+        if(regions != null) {
+            ProtectedRegion region = regions.getRegion(owner);
+            if(region.getFlag(Flags.PVP) == StateFlag.State.DENY){
+                region.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+            }else{
+                region.setFlag(Flags.PVP, StateFlag.State.DENY);
+            }
+        }
     }
 
     public void removeProtectRegion(String regionName, World world){
@@ -54,4 +68,27 @@ public class WorldGuardUtil {
         }
     }
 
+    public void removeMember(String owner, String target, World world){
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regions = container.get(BukkitAdapter.adapt(world));
+        if(regions != null){
+            ProtectedRegion region = regions.getRegion(owner);
+            DefaultDomain members = region.getMembers();
+            members.removePlayer(UUID.fromString(target));
+            region.setMembers(members);
+        }
+    }
+
+    public boolean findJoinMember(String owner, String target, World world){
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regions = container.get(BukkitAdapter.adapt(world));
+        if(regions != null){
+            ProtectedRegion region = regions.getRegion(owner);
+            DefaultDomain members = region.getMembers();
+            if(members.contains(UUID.fromString(target))){
+                return false;
+            }
+        }
+        return true;
+    }
 }

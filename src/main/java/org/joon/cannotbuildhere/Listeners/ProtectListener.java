@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ProtectListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
-        if(e.getBlock().getType() == Material.HONEY_BLOCK){
+        if(e.getBlock().getType() == Material.SEA_LANTERN){
             Location loc = e.getBlock().getLocation();
             for(Location l : CanNotBuildHere.coreLoc.keySet()){
                 if(l.equals(loc)){

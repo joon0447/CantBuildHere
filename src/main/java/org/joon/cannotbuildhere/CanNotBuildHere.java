@@ -1,11 +1,9 @@
 package org.joon.cannotbuildhere;
 
-import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.joon.cannotbuildhere.Commands.BuildAdminCommand;
@@ -14,10 +12,8 @@ import org.joon.cannotbuildhere.Listeners.*;
 import org.joon.cannotbuildhere.Managers.DataManager;
 import org.joon.cannotbuildhere.Utils.LoadItem;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class CanNotBuildHere extends JavaPlugin {
@@ -27,6 +23,7 @@ public final class CanNotBuildHere extends JavaPlugin {
     public int area;
     public int areaDefaultSize;
     public int areaDefaultHeight;
+    public String areaWorld;
 
     public final LoadItem loadItem = new LoadItem();
     public static HashMap<Location, String> coreLoc;  // 건차 코어 저장
@@ -37,6 +34,7 @@ public final class CanNotBuildHere extends JavaPlugin {
     public void onEnable() {
         worldGuardPlugin = getWorldGuard();
 
+        areaWorld = this.getConfig().getString("건차 생성 월드");
         area = this.getConfig().getInt("건차 간의 간격");
         areaDefaultSize = this.getConfig().getInt("건차 기본 범위");
         areaDefaultHeight = this.getConfig().getInt("건차 기본 높이");

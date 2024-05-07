@@ -56,6 +56,7 @@ public class DataManager {
     }
 
     public void loadNotAdminArea(){
+        CanNotBuildHere.notAreaList.clear();
         File file = new File(CanNotBuildHere.getInstance().getDataFolder(), "AdminAreaList");
         File[] files = file.listFiles();
         Double[] arr;
@@ -121,7 +122,7 @@ public class DataManager {
         if (location != null) {
             Block block = location.getBlock();
             if (block.getType() == Material.RED_STAINED_GLASS ||
-            block.getType() == Material.HONEY_BLOCK) {
+            block.getType() == Material.SEA_LANTERN) {
                 block.setType(Material.AIR);
             }
         }
@@ -132,13 +133,14 @@ public class DataManager {
         Location cLoc = yc.getLocation("Core Location");
         Location loc;
         if(cLoc != null){
+            int areaSize = CanNotBuildHere.getInstance().areaDefaultSize;
             World world = player.getWorld();
             double x = cLoc.getX();
             double y = cLoc.getY();
             double z = cLoc.getZ();
-            for(double i=x-6; i<=x+6; i++){
+            for(double i=x-(areaSize/2+1); i<=x+(areaSize/2+1); i++){
                 for(double k=y-3; k<=y+CanNotBuildHere.getInstance().areaDefaultHeight; k++){
-                    for(double j=z-6; j<=z+6; j++){
+                    for(double j=z-(areaSize/2+1); j<=z+(areaSize/2+1); j++){
                         loc = new Location(world, i, k, j);
                         destroyBlock(loc);
                     }
@@ -149,9 +151,13 @@ public class DataManager {
         if(file.exists()){
             file.delete();
         }
-        for(Location c : CanNotBuildHere.coreLoc.keySet()){
-            if(CanNotBuildHere.coreLoc.get(c).equals(uuid)){
-                CanNotBuildHere.coreLoc.remove(c);
+
+        if(!CanNotBuildHere.coreLoc.isEmpty()){
+            for(Location c : CanNotBuildHere.coreLoc.keySet()){
+                if(CanNotBuildHere.coreLoc.get(c).equals(uuid)){
+                    CanNotBuildHere.coreLoc.remove(c);
+                    return;
+                }
             }
         }
     }
@@ -172,7 +178,7 @@ public class DataManager {
                 map.put(coreLoc, playerUUID);
             }
         }
-        System.out.println("건차 코어 좌표 로드에 성공했습니다.");
+        System.out.println("[CanNotBuildHere] 생성된 건차 코어 위치를 성공적으로 불러왔습니다.");
         return map;
     }
 

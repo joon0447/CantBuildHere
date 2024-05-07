@@ -21,7 +21,7 @@ public class CoreClickListener implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) throws IOException {
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
-            if(e.getClickedBlock().getType().equals(Material.HONEY_BLOCK)){
+            if(e.getClickedBlock().getType().equals(Material.SEA_LANTERN)){
                 boolean check = false;
                 Player player = e.getPlayer();
                 String uuid = new GetUUID().getUUID(player.getName());
