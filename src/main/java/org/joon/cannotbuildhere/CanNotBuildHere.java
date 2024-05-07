@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.joon.cannotbuildhere.Commands.BuildAdminCommand;
-import org.joon.cannotbuildhere.Commands.TestCommand;
 import org.joon.cannotbuildhere.Listeners.*;
 import org.joon.cannotbuildhere.Managers.DataManager;
 import org.joon.cannotbuildhere.Utils.LoadItem;
@@ -51,7 +50,6 @@ public final class CanNotBuildHere extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
         Bukkit.getPluginManager().registerEvents(new ProtectListener(), this);
 
-        getCommand("test").setExecutor(new TestCommand(this)); // 테스트
         getCommand("건차").setExecutor(new BuildAdminCommand(loadItem));
     }
 

@@ -36,7 +36,7 @@ public class BuildAdminCommand implements CommandExecutor {
                     }else if(args[0].equals("막대")){
                         player.getInventory().addItem(loadItem.setStick());
                         player.sendMessage(CanNotBuildHere.prefix + "건차금지구역 설정 막대가 지급되었습니다.");
-                        player.sendMessage(CanNotBuildHere.prefix + "좌클릭, 우클릭으로 금지구역을 설정할 수 있습니다.");
+                        player.sendMessage(CanNotBuildHere.prefix + "/건차 설정 을 입력하여 금지구역 설정을 시작할 수 있습니다.");
                     }else if(args[0].equals("설정")){
                         try {
                             String uuid = new GetUUID().getUUID(player.getName());
@@ -44,7 +44,7 @@ public class BuildAdminCommand implements CommandExecutor {
                             player.sendMessage(CanNotBuildHere.prefix + "건차금지구역 설정을 시작합니다.");
                             player.sendMessage(CanNotBuildHere.prefix + "좌클릭, 우클릭으로 구역을 설정해주세요.");
                             player.sendMessage(CanNotBuildHere.prefix + "구역은 좌클릭, 우클릭 2군데를 꼭짓점으로 정육면체로 설정됩니다.");
-                            player.sendMessage(CanNotBuildHere.prefix + "두 개의 지점을 설정했으면 /건차 완료 를 입력해주세요.");
+                            player.sendMessage(CanNotBuildHere.prefix + "두 개의 지점을 설정했으면 /건차 완료 지역이름을 입력해주세요.");
                         } catch (IOException e) {
                             player.sendMessage(CanNotBuildHere.prefix + "건차금지구역 설정모드 진입에 실패했습니다.");
                         }

@@ -7,4 +7,3 @@ depend:
 commands:
   건차:
     description: "[관리자명령어]"
-  test:
