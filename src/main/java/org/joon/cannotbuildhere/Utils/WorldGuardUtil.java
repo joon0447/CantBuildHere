@@ -31,6 +31,9 @@ public class WorldGuardUtil {
         ProtectedRegion region = new ProtectedCuboidRegion(regionName, pt1, pt2);
         region.setFlag(Flags.BUILD.getRegionGroupFlag(), RegionGroup.MEMBERS);
         region.setFlag(Flags.PVP, StateFlag.State.DENY);
+        region.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+        region.setFlag(Flags.OTHER_EXPLOSION, StateFlag.State.DENY);
+        region.setFlag(Flags.TNT, StateFlag.State.DENY);
         region.setFlag(Flags.LIGHTNING, StateFlag.State.DENY);
         region.setFlag(Flags.DENY_MESSAGE, CanNotBuildHere.prefix + player.getName() +"님의 지역입니다.");
         com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(world)).addRegion(region);

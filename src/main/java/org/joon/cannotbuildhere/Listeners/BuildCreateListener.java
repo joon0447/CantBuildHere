@@ -20,8 +20,10 @@ public class BuildCreateListener implements Listener {
 
     private final LoadItem loadItem;
     private final WorldGuardUtil worldGuard = new WorldGuardUtil();
-    public BuildCreateListener(LoadItem loadItem) {
+    private final DataManager dataManager;
+    public BuildCreateListener(LoadItem loadItem, DataManager dataManager) {
         this.loadItem = loadItem;
+        this.dataManager = dataManager;
     }
 
     @EventHandler
@@ -44,7 +46,7 @@ public class BuildCreateListener implements Listener {
                             return;
                         }
                     }
-                    if(new DataManager().checkAlreadyCreate(player.getName())){
+                    if(!CanNotBuildHere.areaUUID.contains(player.getUniqueId().toString())){
                         World world = player.getWorld();
                         double y = Math.floor(loc.getY()) + 3; // 건차 중앙 블록 y좌표
                         Location blockLoc = new Location(world,x,y,z);
@@ -61,6 +63,7 @@ public class BuildCreateListener implements Listener {
                         worldGuard.addMember(player.getUniqueId().toString(), player.getUniqueId().toString(), player.getWorld());
                         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
                         player.getInventory().removeItem(loadItem.createPaper());
+                        CanNotBuildHere.areaUUID.add(player.getUniqueId().toString());
                         player.sendMessage(CanNotBuildHere.prefix + "건설차단 지역을 생성했습니다 !");
                         player.sendMessage(CanNotBuildHere.prefix + "빨간 테두리로 구성된 면까지 보호를 받습니다.");
                     }else{

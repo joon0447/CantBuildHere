@@ -13,6 +13,7 @@ import org.joon.cannotbuildhere.Utils.LoadItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public final class CanNotBuildHere extends JavaPlugin {
@@ -24,8 +25,10 @@ public final class CanNotBuildHere extends JavaPlugin {
     public int areaDefaultHeight;
     public String areaWorld;
 
+    public DataManager dataManager;
     public final LoadItem loadItem = new LoadItem();
     public static HashMap<Location, String> coreLoc;  // 건차 코어 저장
+    public static HashSet<String> areaUUID;
 
     private WorldGuardPlugin worldGuardPlugin;
     
@@ -39,12 +42,13 @@ public final class CanNotBuildHere extends JavaPlugin {
         areaDefaultHeight = this.getConfig().getInt("건차 기본 높이");
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
-        DataManager dataManager = new DataManager();
+        dataManager = new DataManager();
         dataManager.createFile();
         dataManager.loadNotAdminArea();
         coreLoc = dataManager.loadCoreLocation();
+        areaUUID = new HashSet<>();
 
-        Bukkit.getPluginManager().registerEvents(new BuildCreateListener(loadItem), this);
+        Bukkit.getPluginManager().registerEvents(new BuildCreateListener(loadItem, dataManager), this);
         Bukkit.getPluginManager().registerEvents(new AdminAreaSetListener(loadItem), this);
         Bukkit.getPluginManager().registerEvents(new CoreClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);

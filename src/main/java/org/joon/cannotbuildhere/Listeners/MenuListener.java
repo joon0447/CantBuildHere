@@ -49,6 +49,7 @@ public class MenuListener implements Listener {
                     data.removeArea(uuid, player);
                     player.closeInventory();
                     player.playSound(player.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 2, 1);
+                    CanNotBuildHere.areaUUID.remove(player.getUniqueId().toString());
                     player.sendMessage(CanNotBuildHere.prefix + "건차 철거가 완료되었습니다.");
                     break;
                 default:
